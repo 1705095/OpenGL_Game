@@ -8,9 +8,9 @@ public class DisplayManager {
     private static final int HEIGHT = 720;
     private static final int FPS_CAP = 120;  // FPS count
     public static void createDisplay(){
-        ContextAttribs attribs = new ContextAttribs(3,2); // Version of openGL used
-        attribs.withForwardCompatible(true);
-        attribs.withProfileCore(true);
+        ContextAttribs attribs = new ContextAttribs(3,2) // Version of openGL used
+        .withForwardCompatible(true)
+       .withProfileCore(true);
         try {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
             Display.create(new PixelFormat(), attribs);
