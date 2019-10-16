@@ -21,13 +21,14 @@ public class Loader {
     private List<Integer> vbos = new ArrayList<Integer>();
     private List<Integer> textures = new ArrayList<Integer>();
 
-    public RawModel loadToVAO(float[] position, float[] textureCoords, int[] indice){
+    public RawModel loadToVAO(float[] position, float[] textureCoords, float[] normals, int[] indices){
         int vaoID = createVAO();
-        bindIndicesBuffer(indice);
+        bindIndicesBuffer(indices);
         storeDataInAttributeList(0,3, position);
         storeDataInAttributeList(1,2, textureCoords);
+        storeDataInAttributeList(2,3, normals);
         unbindVAO();
-        return new RawModel(vaoID, indice.length);
+        return new RawModel(vaoID, indices.length);
 
     }
 
@@ -36,6 +37,10 @@ public class Loader {
         texture = TextureLoader.getTexture("PNG",new FileInputStream("res/"+fileName+".png"));
         int textureId = texture.getTextureID();
         textures.add(textureId);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         return textureId;
     }
 
