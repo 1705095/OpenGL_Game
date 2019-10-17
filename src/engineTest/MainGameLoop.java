@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import models.RawModel;
 import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 import java.io.IOException;
@@ -19,41 +20,52 @@ import java.util.Random;
 public class MainGameLoop {
 
     public static void main(String[] args) throws IOException {
+
         DisplayManager.createDisplay();
         Loader loader = new Loader();
 
+        RawModel model = OBJLoader.loadObjModel("tree",loader);
+        RawModel model1 = OBJLoader.loadObjModel("hut", loader);
 
+        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
+        TexturedModel staticModel1 = new TexturedModel(model1, new ModelTexture(loader.loadTexture("hut")));
 
-        RawModel model = OBJLoader.loadObjModel("dragon",loader);
+  /*    texture.setShineDamper(10);
+        texture.setReflectivity(1);*/
 
-        TexturedModel cubeModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("purple")));
-        ModelTexture texture = cubeModel.getTexture();
-        texture.setShineDamper(10);
-        texture.setReflectivity(1);
-        Entity entity = new Entity(cubeModel, new Vector3f(0,0,-50), 0, 0, 0,1);
-
-        Light light = new Light(new Vector3f(3000,2000,3000), new Vector3f(1,1,1));
-
-        Camera camera = new Camera();
-
-        List<Entity> allCubes = new ArrayList<Entity>();
+        List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
-
-        for (int i=0; i<10; i++){
-            float x = random.nextFloat() * 100 - 50;
-            float y = random.nextFloat() * 100 - 50;
-            float z = random.nextFloat() * -300;
-            allCubes.add(new Entity(cubeModel, new Vector3f(x, y, z), random.nextFloat()*180f, random.nextFloat()*180f, 0f, 1f));
+        for(int i=0;i<500;i++){
+            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
         }
 
+        List<Entity>  hutEntities = new ArrayList<Entity>();
+        Random random1 = new Random();
+        for (int i=0;i<10;i++){
+            hutEntities.add(new Entity(staticModel1, new Vector3f(random.nextFloat()*800-400, 0, random.nextFloat()*-600),0,0,0,.5f));
+        }
+
+        Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
+
+        Terrain terrain = new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain2 = new Terrain(1,0,loader, new ModelTexture(loader.loadTexture("grass")));
+
+        Camera camera = new Camera();
         MasterRenderer renderer = new MasterRenderer();
+
         while (!Display.isCloseRequested()){
-            //entity.increaseRotation(0,1,0);
             camera.move();
-            for (Entity cube: allCubes){
-                renderer.processEntity(cube);
-                entity.increaseRotation(0,1,0);
+
+            renderer.processTerrain(terrain);
+            renderer.processTerrain(terrain2);
+            for(Entity entity:entities){
+                renderer.processEntity(entity);
             }
+
+            for (Entity entity:hutEntities){
+                renderer.processEntity(entity);
+            }
+
             renderer.render(light, camera);
             DisplayManager.updateDisplay();
         }

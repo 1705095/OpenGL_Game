@@ -1,0 +1,26 @@
+    List<Entity> allCubes = new ArrayList<Entity>();
+        Random random = new Random();
+
+        for (int i=0; i<10; i++){
+            float x = random.nextFloat() * 100 - 50;
+            float y = random.nextFloat() * 100 - 50;
+            float z = random.nextFloat() * -300;
+            allCubes.add(new Entity(cubeModel, new Vector3f(x, y, z), random.nextFloat()*180f, random.nextFloat()*180f, 0f, 1f));
+        }
+
+
+
+
+
+
+
+    while (!Display.isCloseRequested()){
+            //entity.increaseRotation(0,1,0);
+            camera.move();
+            for (Entity cube: allCubes){
+                renderer.processEntity(cube);
+                entity.increaseRotation(0,1,0);
+            }
+            renderer.render(light, camera);
+            DisplayManager.updateDisplay();
+        }
