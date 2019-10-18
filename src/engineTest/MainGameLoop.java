@@ -26,23 +26,44 @@ public class MainGameLoop {
 
         RawModel model = OBJLoader.loadObjModel("tree",loader);
         RawModel model1 = OBJLoader.loadObjModel("hut", loader);
+        RawModel model2 = OBJLoader.loadObjModel("fern", loader);
+        RawModel model3 = OBJLoader.loadObjModel("grassModel", loader);
 
-        TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
-        TexturedModel staticModel1 = new TexturedModel(model1, new ModelTexture(loader.loadTexture("hut")));
+        TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
+        TexturedModel hut = new TexturedModel(model1, new ModelTexture(loader.loadTexture("hut")));
+
+        TexturedModel fern = new TexturedModel(model2, new ModelTexture(loader.loadTexture("fern")));
+        fern.getTexture().setHasTransparency(true);
+
+        TexturedModel grass = new TexturedModel(model3, new ModelTexture(loader.loadTexture("grassTex")));
+        grass.getTexture().setHasTransparency(true);
+        grass.getTexture().setUseFakeLighting(true);
 
   /*    texture.setShineDamper(10);
         texture.setReflectivity(1);*/
 
-        List<Entity> entities = new ArrayList<Entity>();
+        List<Entity> TreeEntities = new ArrayList<Entity>();
         Random random = new Random();
         for(int i=0;i<500;i++){
-            entities.add(new Entity(staticModel, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
+            TreeEntities.add(new Entity(tree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
         }
 
         List<Entity>  hutEntities = new ArrayList<Entity>();
         Random random1 = new Random();
         for (int i=0;i<10;i++){
-            hutEntities.add(new Entity(staticModel1, new Vector3f(random.nextFloat()*800-400, 0, random.nextFloat()*-600),0,0,0,.5f));
+            hutEntities.add(new Entity(hut, new Vector3f(random1.nextFloat()*800-400, 0, random1.nextFloat()*-600),0,0,0,.5f));
+        }
+
+        List<Entity> fernEntities = new ArrayList<Entity>();
+        Random random2 = new Random();
+        for (int i=0;i<1000;i++){
+            fernEntities.add(new Entity(fern, new Vector3f(random2.nextFloat()*800-400,0,random2.nextFloat()*-600),0,0,0,.3f));
+        }
+
+        List<Entity> grassEntities = new ArrayList<Entity>();
+        Random random3 = new Random();
+        for (int i=0;i<5000;i++){
+            grassEntities.add(new Entity(grass, new Vector3f(random3.nextFloat()*800-400, 0, random3.nextFloat()*-600), 0, 0, 0, .3f));
         }
 
         Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
@@ -58,11 +79,19 @@ public class MainGameLoop {
 
             renderer.processTerrain(terrain);
             renderer.processTerrain(terrain2);
-            for(Entity entity:entities){
+            for(Entity entity:TreeEntities){
                 renderer.processEntity(entity);
             }
 
             for (Entity entity:hutEntities){
+                renderer.processEntity(entity);
+            }
+
+            for (Entity entity:fernEntities){
+                renderer.processEntity(entity);
+            }
+
+            for (Entity entity:grassEntities){
                 renderer.processEntity(entity);
             }
 
