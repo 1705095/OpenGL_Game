@@ -4,6 +4,8 @@ import entity.Camera;
 import entity.Entity;
 import entity.Light;
 import models.TexturedModel;
+import objConverter.ModelData;
+import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
@@ -12,6 +14,7 @@ import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
 
+import javax.jws.WebParam;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +27,25 @@ public class MainGameLoop {
         DisplayManager.createDisplay();
         Loader loader = new Loader();
 
-        RawModel model = OBJLoader.loadObjModel("tree",loader);
-        RawModel model1 = OBJLoader.loadObjModel("hut", loader);
-        RawModel model2 = OBJLoader.loadObjModel("fern", loader);
-        RawModel model3 = OBJLoader.loadObjModel("grassModel", loader);
-        RawModel model4 = OBJLoader.loadObjModel("lowPolyTree", loader);
+        ModelData modelData = OBJFileLoader.loadOBJ("tree");
+        RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
+
+        ModelData modelData1 = OBJFileLoader.loadOBJ("hut");
+        RawModel model1 = loader.loadToVAO(modelData1.getVertices(), modelData1.getTextureCoords(), modelData1.getNormals(), modelData1.getIndices());
+
+        ModelData modelData2 = OBJFileLoader.loadOBJ("fern");
+        RawModel model2 = loader.loadToVAO(modelData2.getVertices(), modelData2.getTextureCoords(), modelData2.getNormals(), modelData2.getIndices());
+
+        ModelData modelData3 = OBJFileLoader.loadOBJ("grassModel");
+        RawModel model3 = loader.loadToVAO(modelData3.getVertices(), modelData3.getTextureCoords(), modelData3.getNormals(), modelData3.getIndices());
+
+        ModelData modelData4 = OBJFileLoader.loadOBJ("lowPolyTree");
+        RawModel model4 = loader.loadToVAO(modelData4.getVertices(), modelData4.getTextureCoords(), modelData4.getNormals(), modelData4.getIndices());
 
         TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
+       /* ModelTexture treesTex = tree.getTexture();
+        treesTex.setReflectivity(1);
+        treesTex.setShineDamper(10);*/
         TexturedModel hut = new TexturedModel(model1, new ModelTexture(loader.loadTexture("hut")));
         TexturedModel lpTree = new TexturedModel(model4, new ModelTexture(loader.loadTexture("LptreeTex")));
 
@@ -43,13 +58,14 @@ public class MainGameLoop {
 
 
 
+
   /*    texture.setShineDamper(10);
         texture.setReflectivity(1);*/
 
         List<Entity> TreeEntities = new ArrayList<Entity>();
         Random random = new Random();
         for(int i=0;i<500;i++){
-            TreeEntities.add(new Entity(tree, new Vector3f(random.nextFloat()*800 - 400,0,random.nextFloat() * -600),0,0,0,3));
+            TreeEntities.add(new Entity(tree, new Vector3f(random.nextFloat()*800-400 ,0,random.nextFloat() *-600),0,0,0,6));
         }
 
         List<Entity>  hutEntities = new ArrayList<Entity>();
