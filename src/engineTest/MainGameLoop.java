@@ -13,6 +13,8 @@ import models.RawModel;
 import shaders.StaticShader;
 import terrains.Terrain;
 import textures.ModelTexture;
+import textures.TerrainTexture;
+import textures.TerrainTexturePack;
 
 import javax.jws.WebParam;
 import java.io.IOException;
@@ -26,6 +28,16 @@ public class MainGameLoop {
 
         DisplayManager.createDisplay();
         Loader loader = new Loader();
+
+        /* loading textures */
+
+        TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("texture1"));
+        TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("texture2"));
+        TerrainTexture gTexture = new TerrainTexture(loader.loadTexture("texture3"));
+        TerrainTexture bTexture = new TerrainTexture(loader.loadTexture("texture4"));
+
+        TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
+        TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
         ModelData modelData = OBJFileLoader.loadOBJ("tree");
         RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
@@ -94,8 +106,8 @@ public class MainGameLoop {
 
         Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
 
-        Terrain terrain = new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass")));
-        Terrain terrain2 = new Terrain(1,0,loader, new ModelTexture(loader.loadTexture("grass")));
+        Terrain terrain = new Terrain(0,-1,loader, texturePack, blendMap);
+        Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
 
         Camera camera = new Camera();
         MasterRenderer renderer = new MasterRenderer();
