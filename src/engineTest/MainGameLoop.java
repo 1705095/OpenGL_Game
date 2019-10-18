@@ -28,9 +28,11 @@ public class MainGameLoop {
         RawModel model1 = OBJLoader.loadObjModel("hut", loader);
         RawModel model2 = OBJLoader.loadObjModel("fern", loader);
         RawModel model3 = OBJLoader.loadObjModel("grassModel", loader);
+        RawModel model4 = OBJLoader.loadObjModel("lowPolyTree", loader);
 
         TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
         TexturedModel hut = new TexturedModel(model1, new ModelTexture(loader.loadTexture("hut")));
+        TexturedModel lpTree = new TexturedModel(model4, new ModelTexture(loader.loadTexture("LptreeTex")));
 
         TexturedModel fern = new TexturedModel(model2, new ModelTexture(loader.loadTexture("fern")));
         fern.getTexture().setHasTransparency(true);
@@ -38,6 +40,8 @@ public class MainGameLoop {
         TexturedModel grass = new TexturedModel(model3, new ModelTexture(loader.loadTexture("grassTex")));
         grass.getTexture().setHasTransparency(true);
         grass.getTexture().setUseFakeLighting(true);
+
+
 
   /*    texture.setShineDamper(10);
         texture.setReflectivity(1);*/
@@ -66,6 +70,12 @@ public class MainGameLoop {
             grassEntities.add(new Entity(grass, new Vector3f(random3.nextFloat()*800-400, 0, random3.nextFloat()*-600), 0, 0, 0, .3f));
         }
 
+        List<Entity> lowPolyEntities = new ArrayList<Entity>();
+        Random random4 = new Random();
+        for (int i=0; i<1000; i++){
+            lowPolyEntities.add(new Entity(lpTree, new Vector3f(random4.nextFloat()*800-400, 0, random4.nextFloat()*-600),0,0,0,.3f));
+        }
+
         Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
 
         Terrain terrain = new Terrain(0,0,loader, new ModelTexture(loader.loadTexture("grass")));
@@ -92,6 +102,10 @@ public class MainGameLoop {
             }
 
             for (Entity entity:grassEntities){
+                renderer.processEntity(entity);
+            }
+
+            for (Entity entity:lowPolyEntities){
                 renderer.processEntity(entity);
             }
 
