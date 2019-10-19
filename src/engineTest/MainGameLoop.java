@@ -40,10 +40,12 @@ public class MainGameLoop {
         TerrainTexturePack texturePack = new TerrainTexturePack(backgroundTexture, rTexture, gTexture, bTexture);
         TerrainTexture blendMap = new TerrainTexture(loader.loadTexture("blendMap"));
 
+        Terrain terrain = new Terrain(-0.5f,-1,loader, texturePack, blendMap, "white");
+
         ModelData modelData = OBJFileLoader.loadOBJ("tree");
         RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
         TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
-       /* ModelTexture treesTex = tree.getTexture();
+       /*ModelTexture treesTex = tree.getTexture();
         treesTex.setReflectivity(1);
         treesTex.setShineDamper(10);*/
 
@@ -69,60 +71,78 @@ public class MainGameLoop {
         ModelData modelData5 = OBJFileLoader.loadOBJ("person");
         RawModel model5 = loader.loadToVAO(modelData5.getVertices(), modelData5.getTextureCoords(), modelData5.getNormals(), modelData5.getIndices());
         TexturedModel person = new TexturedModel(model5, new ModelTexture(loader.loadTexture("person")));
-        Player player = new Player(person, new Vector3f(100,0,-50),0,0,0,1);
+        Player player = new Player(person, new Vector3f(100,0,-50),0,0,0,.4f);
         Camera camera = new Camera(player);
 
 
 
-
-  /*    texture.setShineDamper(10);
-        texture.setReflectivity(1);*/
-
+        // TREE
         List<Entity> TreeEntities = new ArrayList<Entity>();
         Random random = new Random();
+
         for(int i=0;i<100;i++){
-            TreeEntities.add(new Entity(tree, new Vector3f(random.nextFloat()*800-400 ,0,random.nextFloat() *-600),0,0,0,10));
+            float x = random.nextFloat()*800-400;
+            float z = random.nextFloat() * -600;
+            TreeEntities.add(new Entity(tree, new Vector3f(x ,terrain.getHeightOfTerrain(x,z),z),0,random.nextFloat() * 360,0,5));
         }
 
+        // HUT
         List<Entity>  hutEntities = new ArrayList<Entity>();
         Random random1 = new Random();
+
         for (int i=0;i<10;i++){
-            hutEntities.add(new Entity(hut, new Vector3f(random1.nextFloat()*800-400, 0, random1.nextFloat()*-600),0,0,0,.5f));
+            float x1 = random1.nextFloat()*800-400;
+            float z1 = random1.nextFloat() * -600;
+            hutEntities.add(new Entity(hut, new Vector3f(x1, terrain.getHeightOfTerrain(x1,z1), z1),0,random1.nextFloat()*360,0,.5f));
         }
 
+        // FERN
         List<Entity> fernEntities = new ArrayList<Entity>();
         Random random2 = new Random();
         for (int i=0;i<1000;i++){
-            fernEntities.add(new Entity(fern, new Vector3f(random2.nextFloat()*800-400,0,random2.nextFloat()*-600),0,0,0,.3f));
+            float x2 = random2.nextFloat() * 800 -400;
+            float z2 = random2.nextFloat() * -600;
+            fernEntities.add(new Entity(fern, new Vector3f(x2, terrain.getHeightOfTerrain(x2, z2), z2), 0, random2.nextFloat()*360, 0, 1f));
         }
 
+
+        // GRASS
         List<Entity> grassEntities = new ArrayList<Entity>();
         Random random3 = new Random();
+
         for (int i=0;i<5000;i++){
-            grassEntities.add(new Entity(grass, new Vector3f(random3.nextFloat()*800-400, 0, random3.nextFloat()*-600), 0, 0, 0, .3f));
+            float x3 = random3.nextFloat() * 800 - 400;
+            float z3 = random3.nextFloat() * -600;
+            grassEntities.add(new Entity(grass, new Vector3f(x3, terrain.getHeightOfTerrain(x3, z3), z3), 0, random3.nextFloat()*360, 0, .3f));
         }
 
+        // LOW POLY TREE
         List<Entity> lowPolyEntities = new ArrayList<Entity>();
         Random random4 = new Random();
+
         for (int i=0; i<500; i++){
-            lowPolyEntities.add(new Entity(lpTree, new Vector3f(random4.nextFloat()*800-400, 0, random4.nextFloat()*-600),0,0,0,.5f));
+            float x4 = random4.nextFloat() * 800 -400;
+            float z4 = random4.nextFloat() * -600;
+            lowPolyEntities.add(new Entity(lpTree, new Vector3f(x4, terrain.getHeightOfTerrain(x4,z4), z4),0,random4.nextFloat()*360,0,.5f));
         }
 
         Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
 
-        Terrain terrain = new Terrain(0,-1,loader, texturePack, blendMap);
-        Terrain terrain2 = new Terrain(-1, -1, loader, texturePack, blendMap);
+
+
 
 
         MasterRenderer renderer = new MasterRenderer();
 
         while (!Display.isCloseRequested()){
             camera.move();
-            player.move();
-            renderer.processEntity(player);
 
-            renderer.processTerrain(terrain);
-            renderer.processTerrain(terrain2);
+            player.move(terrain);
+
+            renderer.processEntity(player); // renders player
+
+            renderer.processTerrain(terrain); // renders terrain
+
             for(Entity entity:TreeEntities){
                 renderer.processEntity(entity);
             }
