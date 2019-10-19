@@ -3,6 +3,7 @@ package engineTest;
 import entity.Camera;
 import entity.Entity;
 import entity.Light;
+import entity.Player;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
@@ -54,6 +55,9 @@ public class MainGameLoop {
         ModelData modelData4 = OBJFileLoader.loadOBJ("lowPolyTree");
         RawModel model4 = loader.loadToVAO(modelData4.getVertices(), modelData4.getTextureCoords(), modelData4.getNormals(), modelData4.getIndices());
 
+        ModelData modelData5 = OBJFileLoader.loadOBJ("person");
+        RawModel model5 = loader.loadToVAO(modelData5.getVertices(), modelData5.getTextureCoords(), modelData5.getNormals(), modelData5.getIndices());
+
         TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
        /* ModelTexture treesTex = tree.getTexture();
         treesTex.setReflectivity(1);
@@ -67,6 +71,11 @@ public class MainGameLoop {
         TexturedModel grass = new TexturedModel(model3, new ModelTexture(loader.loadTexture("grassTex")));
         grass.getTexture().setHasTransparency(true);
         grass.getTexture().setUseFakeLighting(true);
+
+        TexturedModel person = new TexturedModel(model5, new ModelTexture(loader.loadTexture("person")));
+
+        Player player = new Player(person, new Vector3f(100,0,-50),0,0,0,1);
+
 
 
 
@@ -114,6 +123,8 @@ public class MainGameLoop {
 
         while (!Display.isCloseRequested()){
             camera.move();
+            player.move();
+            renderer.processEntity(player);
 
             renderer.processTerrain(terrain);
             renderer.processTerrain(terrain2);

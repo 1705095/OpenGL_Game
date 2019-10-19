@@ -12,24 +12,30 @@ public class Camera {
     public Camera(){}
 
     public void move(){
-        if (Keyboard.isKeyDown(Keyboard.KEY_W)){
+
+        /* Temporarily disabled for player */
+        if (Keyboard.isKeyDown(Keyboard.KEY_UP)){
             position.z -= 1f;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_S)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
             position.z += 1f;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_D)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
             position.x += 1f;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_A)){
+        if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
             position.x -= 1f;
         }
-       if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+       if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD0)){
             position.y+=0.2f;
         }
-        if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)){
-            position.y-=0.2f;
+        if(Keyboard.isKeyDown(Keyboard.KEY_NUMPAD1)){
+            if (position.y > 0.5f) {
+                position.y -= 0.2f;
+            }
         }
+
+
 
 
 
