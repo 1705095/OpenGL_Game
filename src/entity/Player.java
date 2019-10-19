@@ -8,7 +8,7 @@ import renderEngine.DisplayManager;
 
 public class Player extends Entity{
 
-    private static final float RUN_SPEED = 20; // unit per second
+    private static final float RUN_SPEED = 50; // unit per second
     private static final float TURN_SPEED = 160; // degree per second
     private static final float GRAVITY = -50;
     private static final float JUMP_POWER = 30;
