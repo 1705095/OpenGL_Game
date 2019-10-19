@@ -55,8 +55,13 @@ public class MainGameLoop {
 
         ModelData modelData2 = OBJFileLoader.loadOBJ("fern");
         RawModel model2 = loader.loadToVAO(modelData2.getVertices(), modelData2.getTextureCoords(), modelData2.getNormals(), modelData2.getIndices());
-        TexturedModel fern = new TexturedModel(model2, new ModelTexture(loader.loadTexture("fern")));
+        ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("multiFern"));
+        fernTextureAtlas.setNumOfRows(2);
+        TexturedModel fern = new TexturedModel(model2, fernTextureAtlas);
+       // TexturedModel fern = new TexturedModel(model2, new ModelTexture(loader.loadTexture("fern")));
         fern.getTexture().setHasTransparency(true);
+
+
 
         ModelData modelData3 = OBJFileLoader.loadOBJ("grassModel");
         RawModel model3 = loader.loadToVAO(modelData3.getVertices(), modelData3.getTextureCoords(), modelData3.getNormals(), modelData3.getIndices());
@@ -102,7 +107,7 @@ public class MainGameLoop {
         for (int i=0;i<1000;i++){
             float x2 = random2.nextFloat() * 800 -400;
             float z2 = random2.nextFloat() * -600;
-            fernEntities.add(new Entity(fern, new Vector3f(x2, terrain.getHeightOfTerrain(x2, z2), z2), 0, random2.nextFloat()*360, 0, 1f));
+            fernEntities.add(new Entity(fern,random2.nextInt(4), new Vector3f(x2, terrain.getHeightOfTerrain(x2, z2), z2), 0, random2.nextFloat()*360, 0, 1f));
         }
 
 
