@@ -29,6 +29,13 @@ public class Loader {
 
     }
 
+    public RawModel loadToVAO(float[] positions){
+        int vaoId = createVAO();
+        this.storeDataInAttributeList(0,2,positions);
+        unbindVAO();
+        return new RawModel(vaoId, positions.length/2);
+    }
+
     public int loadTexture(String fileName) throws IOException {
         Texture texture = null;
         texture = TextureLoader.getTexture("PNG",new FileInputStream("res/"+fileName+".png"));

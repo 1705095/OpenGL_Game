@@ -4,10 +4,13 @@ import entity.Camera;
 import entity.Entity;
 import entity.Light;
 import entity.Player;
+import gui.GuiRenderer;
+import gui.GuiTexture;
 import models.TexturedModel;
 import objConverter.ModelData;
 import objConverter.OBJFileLoader;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 import renderEngine.*;
 import models.RawModel;
@@ -45,7 +48,7 @@ public class MainGameLoop {
         ModelData modelData = OBJFileLoader.loadOBJ("tree");
         RawModel model = loader.loadToVAO(modelData.getVertices(), modelData.getTextureCoords(), modelData.getNormals(), modelData.getIndices());
         TexturedModel tree = new TexturedModel(model, new ModelTexture(loader.loadTexture("tree")));
-       /*ModelTexture treesTex = tree.getTexture();
+        /*ModelTexture treesTex = tree.getTexture();
         treesTex.setReflectivity(1);
         treesTex.setShineDamper(10);*/
 
@@ -132,12 +135,13 @@ public class MainGameLoop {
         }
 
         Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
-
-
-
-
-
         MasterRenderer renderer = new MasterRenderer();
+
+        List<GuiTexture> guis = new ArrayList<GuiTexture>();
+        GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.6f,-0.6f), new Vector2f(0.25f, 0.25f));
+        guis.add(gui);
+
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
 
         while (!Display.isCloseRequested()){
             camera.move();
@@ -169,9 +173,11 @@ public class MainGameLoop {
             }
 
             renderer.render(light, camera);
+            guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
 
+        guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUP();
         DisplayManager.closeDisplay();
