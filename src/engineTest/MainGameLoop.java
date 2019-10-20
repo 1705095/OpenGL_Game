@@ -61,7 +61,6 @@ public class MainGameLoop {
         ModelTexture fernTextureAtlas = new ModelTexture(loader.loadTexture("multiFern"));
         fernTextureAtlas.setNumOfRows(2);
         TexturedModel fern = new TexturedModel(model2, fernTextureAtlas);
-       // TexturedModel fern = new TexturedModel(model2, new ModelTexture(loader.loadTexture("fern")));
         fern.getTexture().setHasTransparency(true);
 
 
@@ -80,6 +79,8 @@ public class MainGameLoop {
         RawModel model5 = loader.loadToVAO(modelData5.getVertices(), modelData5.getTextureCoords(), modelData5.getNormals(), modelData5.getIndices());
         TexturedModel person = new TexturedModel(model5, new ModelTexture(loader.loadTexture("person")));
         Player player = new Player(person, new Vector3f(100,0,-50),0,0,0,.4f);
+
+
         Camera camera = new Camera(player);
 
 
@@ -134,7 +135,28 @@ public class MainGameLoop {
             lowPolyEntities.add(new Entity(lpTree, new Vector3f(x4, terrain.getHeightOfTerrain(x4,z4), z4),0,random4.nextFloat()*360,0,.5f));
         }
 
-        Light light = new Light(new Vector3f(2000,2000,2000), new Vector3f(1,1,1));
+
+        /* Setting up lights */
+        List<Light> lights = new ArrayList<Light>();
+        lights.add(new Light(new Vector3f(0,10000,-7000), new Vector3f(0.4f,0.4f,0.4f)));
+        lights.add(new Light(new Vector3f(185,terrain.getHeightOfTerrain(185, -293),-293),new Vector3f(2,0,0), new Vector3f(1,0.01f,0.002f)));
+        lights.add(new Light(new Vector3f(370,terrain.getHeightOfTerrain(370,-300),-300), new Vector3f(0,2,2), new Vector3f(1,0.01f,0.002f)));
+        lights.add(new Light(new Vector3f(293,terrain.getHeightOfTerrain(293,-305),-305), new Vector3f(2,2,0), new Vector3f(1,0.01f,0.002f)));
+
+
+        ModelData light1 = OBJFileLoader.loadOBJ("lamp");
+        RawModel l1 = loader.loadToVAO(light1.getVertices(), light1.getTextureCoords(), light1.getNormals(), light1.getIndices());
+        TexturedModel lamp1 = new TexturedModel(l1, new ModelTexture(loader.loadTexture("lamp")));
+        Entity lampEntity1 = new Entity(lamp1, new Vector3f(185,terrain.getHeightOfTerrain(185,-293),-293),0,0,0,1);
+        Entity lampEntity2 = new Entity(lamp1, new Vector3f(370,terrain.getHeightOfTerrain(370,-300),-300),0,0,0,1);
+        Entity lampEntity3 = new Entity(lamp1, new Vector3f(293,terrain.getHeightOfTerrain(293,-305),-305),0,0,0,1);
+
+
+
+
+
+
+        /*--------*/
         MasterRenderer renderer = new MasterRenderer();
 
         List<GuiTexture> guis = new ArrayList<GuiTexture>();
@@ -151,6 +173,10 @@ public class MainGameLoop {
             renderer.processEntity(player); // renders player
 
             renderer.processTerrain(terrain); // renders terrain
+
+            renderer.processEntity(lampEntity1);
+            renderer.processEntity(lampEntity2);
+            renderer.processEntity(lampEntity3);
 
             for(Entity entity:TreeEntities){
                 renderer.processEntity(entity);
@@ -172,7 +198,7 @@ public class MainGameLoop {
                 renderer.processEntity(entity);
             }
 
-            renderer.render(light, camera);
+            renderer.render(lights, camera);
             guiRenderer.render(guis);
             DisplayManager.updateDisplay();
         }
