@@ -157,7 +157,7 @@ public class MainGameLoop {
 
 
         /*--------*/
-        MasterRenderer renderer = new MasterRenderer();
+        MasterRenderer renderer = new MasterRenderer(loader);
 
         List<GuiTexture> guis = new ArrayList<GuiTexture>();
         GuiTexture gui = new GuiTexture(loader.loadTexture("health"), new Vector2f(-0.6f,-0.6f), new Vector2f(0.25f, 0.25f));
